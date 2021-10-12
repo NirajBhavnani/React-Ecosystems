@@ -1,11 +1,12 @@
 import React from 'react';
-import './App.css';
 import { hot } from 'react-hot-loader';
+import TodoList from './todos/TodoList';
+import './App.css';
 
 // Functional component
 const App = () =>(
     <div className="App">
-        <h1>Hello world!!</h1>
+        <TodoList />
     </div>
 );
 
