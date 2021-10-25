@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { connect } from "react-redux";
+import { createTodo } from "./actions";
 import './NewTodoForm.css';
 
-const NewTodoForm = () => {
+const NewTodoForm = ({ todos, onCreatePressed }) => {
   // In order to keep track of the value in our input box
   const [inputValue, setInputValue] = useState("");
   return (
@@ -13,9 +15,31 @@ const NewTodoForm = () => {
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
       ></input>
-      <button className="new-todo-button" type="button">Create Todo</button>
+      <button className="new-todo-button" 
+      type="button"
+      onClick={ () => {
+        const isDuplicateText = todos.some(todo => todo.text === inputValue);
+        if(!isDuplicateText){
+          onCreatePressed(inputValue);
+          setInputValue('');
+        }
+      }}
+      >Create Todo</button>
     </div>
   );
 };
 
-export default NewTodoForm;
+// take this state object and return another object containing the pieces 
+// of that state that our component needs access to
+const mapStateToProps = state => ({
+  todos: state.todos
+});
+
+// dispatch is a function that allows our components to trigger actions
+// that our redux store will respond to
+const mapDispatchToProps = dispatch => ({
+  onCreatePressed: text => dispatch(createTodo(text))
+});
+
+//higher order function: 2nd argument is basically the component that we want to connect to the Redux store
+export default connect(mapStateToProps, mapDispatchToProps)(NewTodoForm);
